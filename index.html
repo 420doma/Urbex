@@ -7,6 +7,10 @@
     
     <link rel="icon" type="image/png" href="logo.png">
 
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f0f0f0">
+    <link rel="apple-touch-icon" href="icona-192.png">
+
     <style>
         /* Rimuove i margini predefiniti del browser */
         body, html {
@@ -14,7 +18,7 @@
             padding: 0;
             height: 100%;
             overflow: hidden; /* Evita barre di scorrimento doppie */
-            background-color: #f0f0f0; /* Opzionale: un colore di sfondo neutro */
+            background-color: #f0f0f0; 
         }
 
         /* Rende l'iframe a schermo intero */
@@ -35,6 +39,16 @@
         class="fullscreen-iframe"
         allowfullscreen>
     </iframe>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrato!', reg))
+                    .catch(err => console.log('Errore SW:', err));
+            });
+        }
+    </script>
 
 </body>
 </html>
