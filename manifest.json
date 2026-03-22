@@ -1,28 +1,30 @@
 {
-  "short_name": "Urbex-PMI",
-  "name": "Urbex Mallorca - 420Doma",
+  "short_name": "Urbex PMI",
+  "name": "Mallorca Urbex - 420Doma",
   "icons": [
     {
       "src": "icona-192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icona-512.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
-      "src": "icona-1024.png",
+      "src": "logo.png",
       "type": "image/png",
       "sizes": "1024x1024",
       "purpose": "any"
     }
   ],
-  "start_url": "/index.html",
-  "background_color": "#ffffff",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "theme_color": "#000000"
+  "orientation": "portrait",
+  "background_color": "#f0f0f0",
+  "theme_color": "#f0f0f0"
 }
