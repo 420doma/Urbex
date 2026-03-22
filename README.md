@@ -1,1 +1,1 @@
-https://420doma.github.io/Urbex/
+https://420doma.github.io/urbex/
