@@ -1,1 +1,1 @@
-self.addEventListener('fetch', (event) => {});
+navigator.serviceWorker.register('./sw.js') // Nota il ./ davanti
