@@ -6,23 +6,19 @@
     <title>Mallorca Urbex - 420Doma</title>
     
     <link rel="icon" type="image/png" href="logo.png">
-
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2f3130">
     <link rel="apple-touch-icon" href="icona-192.png">
 
     <style>
-        /* Rimuove i margini predefiniti del browser */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Evita barre di scorrimento doppie */
-            /* Sfondo armonizzato con la barra superiore dell'app */
+            overflow: hidden; 
             background-color: #2f3130; 
         }
 
-        /* Rende l'iframe a schermo intero */
         .fullscreen-iframe {
             position: absolute;
             top: 0;
@@ -42,6 +38,7 @@
     </iframe>
 
     <script>
+        // 1. Registrazione del Service Worker (già corretta da te)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -49,6 +46,60 @@
                     .catch(err => console.log('Errore SW:', err));
             });
         }
+
+        // 2. Mantenere lo schermo acceso (Wake Lock API)
+        let wakeLock = null;
+
+        const requestWakeLock = async () => {
+            if ('wakeLock' in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake Lock attivato: lo schermo non andrà in stand-by.');
+                    
+                    wakeLock.addEventListener('release', () => {
+                        console.log('Wake Lock rilasciato.');
+                    });
+                } catch (err) {
+                    console.error(`Errore Wake Lock: ${err.name}, ${err.message}`);
+                }
+            } else {
+                console.warn('Wake Lock API non supportata in questo browser.');
+            }
+        };
+
+        // Richiedi subito il Wake Lock
+        requestWakeLock();
+
+        // 3. Gestione chiusura/background: Svuota la cache e gestisci il Wake Lock
+        document.addEventListener('visibilitychange', () => {
+            // Se l'app torna visibile, riattiva il Wake Lock
+            if (wakeLock !== null && document.visibilityState === 'visible') {
+                requestWakeLock();
+            }
+
+            // Se l'app va in background o viene chiusa, svuota la Cache Storage
+            if (document.visibilityState === 'hidden') {
+                if ('caches' in window) {
+                    caches.keys().then(function(cacheNames) {
+                        cacheNames.forEach(function(cacheName) {
+                            caches.delete(cacheName);
+                            console.log(`Cache ${cacheName} eliminata.`);
+                        });
+                    });
+                }
+            }
+        });
+
+        // Evento di backup per tentare di pulire la cache alla chiusura esatta della finestra
+        window.addEventListener('pagehide', () => {
+            if ('caches' in window) {
+                caches.keys().then(function(cacheNames) {
+                    cacheNames.forEach(function(cacheName) {
+                        caches.delete(cacheName);
+                    });
+                });
+            }
+        });
     </script>
 
 </body>
